@@ -1,3 +1,3 @@
-import Filters from "./TaskFilter";
+import TaskFilter from "./TaskFilter";
 
-export default Filters;
+export default TaskFilter;
