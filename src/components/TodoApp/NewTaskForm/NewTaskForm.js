@@ -8,9 +8,12 @@ export default class NewTaskForm extends Component {
   };
 
   onLabelChange = (e) => {
-    this.setState({
-      label: e.target.value,
-    });
+    // console.log(e.target.value);
+    if (e.target.value) {
+      this.setState({
+        label: e.target.value,
+      });
+    }
   };
 
   onSubmit = (e) => {

@@ -10,7 +10,6 @@ export default class TodoApp extends Component {
   maxId = 1;
 
   state = {
-    filter: "",
     todoData: [this.createTodoItem("Completed task"), this.createTodoItem("Editing task"), this.createTodoItem("Active task")],
   };
 
@@ -19,6 +18,9 @@ export default class TodoApp extends Component {
       label,
       checked: false,
       id: this.maxId++,
+      filter: "",
+      createDate: new Date(),
+      editing: false,
     };
   }
 
@@ -26,7 +28,27 @@ export default class TodoApp extends Component {
     const newItem = this.createTodoItem(text);
 
     this.setState(({ todoData }) => {
-      const newArr = [...todoData, newItem];
+      if (text.length === 0 || text.match(/^\s/)) {
+        const oldArr = [...todoData];
+        return {
+          todoData: oldArr,
+        };
+      } else {
+        const newArr = [...todoData, newItem];
+        return {
+          todoData: newArr,
+        };
+      }
+    });
+  };
+
+  addEditingItem = (text, id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id);
+
+      const oldItem = todoData[idx];
+      const newItem = { ...oldItem, label: text ? text : oldItem.label, editing: !oldItem.editing };
+      const newArr = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
 
       return {
         todoData: newArr,
@@ -59,6 +81,20 @@ export default class TodoApp extends Component {
     });
   };
 
+  onEditingItem = (label) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.label === label);
+
+      const oldItem = todoData[idx];
+      const newItem = { ...oldItem, editing: !oldItem.editing };
+      const newArray = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
+
+      return {
+        todoData: newArray,
+      };
+    });
+  };
+
   setClearComplitedTodo = () => {
     this.setState(({ todoData }) => {
       return { todoData: todoData.filter((el) => !el.checked) };
@@ -78,7 +114,7 @@ export default class TodoApp extends Component {
   onFilterChange = (filter) => this.setState({ filter });
 
   render() {
-    const { todoData, filter } = this.state;
+    const { todoData, filter, createDate, editing } = this.state;
 
     const checkedCount = todoData.filter((el) => el.checked).length;
     const todoCount = todoData.length - checkedCount;
@@ -91,10 +127,16 @@ export default class TodoApp extends Component {
         <section className="main">
           <TaskList
             todos={filterStatus}
+            edit={editing}
+            onEditingItem={(label) => {
+              this.onEditingItem(label);
+            }}
             onDeleted={(id) => {
               this.deleteItem(id);
             }}
             onToggleDone={this.onToggleDone}
+            dataCreated={createDate}
+            addEditingItem={this.addEditingItem}
           />
           <Footer todoCount={todoCount} filter={filter} onFilterChange={this.onFilterChange} setClearComplitedTodo={this.setClearComplitedTodo} />
         </section>
