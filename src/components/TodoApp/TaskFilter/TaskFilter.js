@@ -1,8 +1,21 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import "./TaskFilter.css";
 
 export default class TaskFilter extends Component {
+  static defaultProps = {
+    filter: "all",
+    onFilterChange: () => {},
+    setClearComplitedTodo: () => {},
+  };
+
+  static propTypes = {
+    filter: PropTypes.string,
+    onFilterChange: PropTypes.func,
+    setClearComplitedTodo: PropTypes.func,
+  };
+
   buttonsTodo = [
     { name: "all", label: "All" },
     { name: "active", label: "Active" },

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import "./NewTaskForm.css";
 
@@ -7,8 +8,17 @@ export default class NewTaskForm extends Component {
     label: "",
   };
 
+  static defaultProps = {
+    onLabelChange: () => {},
+    onSubmit: () => {},
+  };
+
+  static propTypes = {
+    onLabelChange: PropTypes.func,
+    onSubmit: PropTypes.func,
+  };
+
   onLabelChange = (e) => {
-    // console.log(e.target.value);
     if (e.target.value) {
       this.setState({
         label: e.target.value,
