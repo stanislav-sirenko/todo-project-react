@@ -1,15 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-
-import { formatDistanceToNow } from "date-fns";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { formatDistanceToNow } from 'date-fns'
 // import { ru } from "date-fns/locale";
 
-import "./Task.css";
+import './Task.css'
 
 export default class Task extends Component {
   state = {
-    label: "",
-  };
+    label: '',
+  }
 
   static defaultProps = {
     onDeleted: () => {},
@@ -18,7 +17,7 @@ export default class Task extends Component {
     onSubmitTask: () => {},
     onLabelEditTask: () => {},
     createDate: () => {},
-  };
+  }
 
   static propTypes = {
     label: PropTypes.string,
@@ -28,32 +27,32 @@ export default class Task extends Component {
     editing: PropTypes.bool,
     onToggleDone: PropTypes.func,
     createDate: PropTypes.instanceOf(Date),
-  };
+  }
 
   onLabelEditTask = (e) => {
     this.setState({
       label: e.target.value,
-    });
-  };
+    })
+  }
 
   onSubmitTask = (e) => {
-    e.preventDefault();
-    this.props.addEditingItem(this.state.label);
+    e.preventDefault()
+    this.props.addEditingItem(this.state.label)
     this.setState({
-      label: "",
-    });
-  };
+      label: '',
+    })
+  }
 
   render() {
-    const { id, label, checked, onDeleted, onEditingItem, editing, onToggleDone, createDate } = this.props;
+    const { id, label, checked, onDeleted, onEditingItem, editing, onToggleDone, createDate } = this.props
 
-    const createTime = formatDistanceToNow(createDate, { includeSeconds: true });
-    const classEdit = editing ? "editing" : checked ? "completed" : "";
+    const createTime = formatDistanceToNow(createDate, { includeSeconds: true })
+    const classEdit = editing ? 'editing' : checked ? 'completed' : ''
     const editInput = (
       <form onSubmit={this.onSubmitTask}>
         <input type="text" className="edit" onChange={this.onLabelEditTask} defaultValue={label} autoFocus />
       </form>
-    );
+    )
 
     return (
       <li key={id} className={classEdit}>
@@ -63,18 +62,18 @@ export default class Task extends Component {
             type="checkbox"
             checked={checked}
             onChange={() => {
-              onToggleDone();
+              onToggleDone()
             }}
-          ></input>
+          />
           <label>
             <span className="description">{label}</span>
             <span className="created">created {createTime} ago</span>
           </label>
-          <button className="icon icon-edit" onClick={onEditingItem}></button>
-          <button className="icon icon-destroy" onClick={onDeleted}></button>
+          <button className="icon icon-edit" onClick={onEditingItem} />
+          <button className="icon icon-destroy" onClick={onDeleted} />
         </div>
         {editing && editInput}
       </li>
-    );
+    )
   }
 }

@@ -1,26 +1,26 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-import TaskFilter from "../TaskFilter";
+import TaskFilter from '../TaskFilter'
 
-import "./Footer.css";
+import './Footer.css'
 
 export default class Footer extends Component {
   static defaultProps = {
-    filter: "all",
+    filter: 'all',
     onFilterChange: () => {},
     setClearComplitedTodo: () => {},
-  };
+  }
 
   static propTypes = {
     todoCount: PropTypes.number,
     filter: PropTypes.string,
     onFilterChange: PropTypes.func,
     setClearComplitedTodo: PropTypes.func,
-  };
+  }
 
   render() {
-    const { todoCount, filter, onFilterChange, setClearComplitedTodo } = this.props;
+    const { todoCount, filter, onFilterChange, setClearComplitedTodo } = this.props
 
     return (
       <footer className="footer">
@@ -29,10 +29,10 @@ export default class Footer extends Component {
           filter={filter}
           onFilterChange={onFilterChange}
           setClearComplitedTodo={() => {
-            setClearComplitedTodo();
+            setClearComplitedTodo()
           }}
         />
       </footer>
-    );
+    )
   }
 }
