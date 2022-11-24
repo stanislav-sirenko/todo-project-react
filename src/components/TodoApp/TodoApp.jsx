@@ -5,7 +5,7 @@ import TaskList from './TaskList'
 import Footer from './Footer'
 
 import './TodoApp.css'
-// console.log();
+
 export default class TodoApp extends Component {
   maxId = 1
 
