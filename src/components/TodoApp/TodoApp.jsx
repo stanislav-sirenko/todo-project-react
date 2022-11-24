@@ -29,20 +29,15 @@ export default class TodoApp extends Component {
   }
 
   addItem = (text) => {
-    this.setState(({ todoData }) => {
-      if (text.length === 0 || text.match(/^\s/)) {
-        const oldArr = [...todoData]
+    if (text) {
+      const newTask = this.createTodoItem(text)
+      this.setState(({ todoData }) => {
+        const newArray = [...todoData, newTask]
         return {
-          todoData: oldArr,
+          todoData: newArray,
         }
-      } else {
-        const newItem = this.createTodoItem(text)
-        const newArr = [...todoData, newItem]
-        return {
-          todoData: newArr,
-        }
-      }
-    })
+      })
+    }
   }
 
   addEditingItem = (text, id) => {

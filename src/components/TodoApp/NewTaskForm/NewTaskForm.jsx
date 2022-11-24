@@ -19,7 +19,11 @@ export default class NewTaskForm extends Component {
   }
 
   onLabelChange = (e) => {
-    if (e.target.value) {
+    if (e.target.value.charAt(0) === ' ') {
+      this.setState({
+        label: '',
+      })
+    } else {
       this.setState({
         label: e.target.value,
       })
@@ -27,8 +31,10 @@ export default class NewTaskForm extends Component {
   }
 
   onSubmit = (e) => {
+    const { addItem } = this.props
+    const { label } = this.state
     e.preventDefault()
-    this.props.addItem(this.state.label)
+    addItem(label)
     this.setState({
       label: '',
     })
