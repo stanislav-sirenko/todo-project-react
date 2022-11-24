@@ -11,9 +11,9 @@ export default class TodoApp extends Component {
 
   state = {
     todoData: [
-      this.createTodoItem('Completed task'),
-      this.createTodoItem('Editing task'),
-      this.createTodoItem('Active task'),
+      this.createTodoItem('learn HTML & CSS'),
+      this.createTodoItem('learn JavaScript'),
+      this.createTodoItem('learn React & TS'),
     ],
   }
 
