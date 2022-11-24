@@ -29,8 +29,6 @@ export default class TodoApp extends Component {
   }
 
   addItem = (text) => {
-    const newItem = this.createTodoItem(text)
-
     this.setState(({ todoData }) => {
       if (text.length === 0 || text.match(/^\s/)) {
         const oldArr = [...todoData]
@@ -38,6 +36,7 @@ export default class TodoApp extends Component {
           todoData: oldArr,
         }
       } else {
+        const newItem = this.createTodoItem(text)
         const newArr = [...todoData, newItem]
         return {
           todoData: newArr,
@@ -85,9 +84,9 @@ export default class TodoApp extends Component {
     })
   }
 
-  onEditingItem = (label) => {
+  onEditingItem = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.label === label)
+      const idx = todoData.findIndex((el) => el.id === id)
 
       const oldItem = todoData[idx]
       const newItem = { ...oldItem, editing: !oldItem.editing }
@@ -132,8 +131,8 @@ export default class TodoApp extends Component {
           <TaskList
             todos={filterStatus}
             edit={editing}
-            onEditingItem={(label) => {
-              this.onEditingItem(label)
+            onEditingItem={(id) => {
+              this.onEditingItem(id)
             }}
             onDeleted={(id) => {
               this.deleteItem(id)

@@ -35,7 +35,7 @@ export default class TaskList extends Component {
           {...allProps}
           label={label}
           onEditingItem={() => {
-            onEditingItem(label)
+            onEditingItem(id)
           }}
           onDeleted={() => {
             onDeleted(id)
