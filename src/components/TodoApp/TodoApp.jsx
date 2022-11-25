@@ -42,54 +42,35 @@ export default class TodoApp extends Component {
 
   addEditingItem = (text, id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
-
-      const oldItem = todoData[idx]
-      const newItem = { ...oldItem, label: text ? text : oldItem.label, editing: !oldItem.editing }
-      const newArr = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)]
-
       return {
-        todoData: newArr,
+        todoData: todoData.map((task) => {
+          return task.id === id ? { ...task, label: text ? text : task.label, editing: !task.editing } : task
+        }),
       }
     })
   }
 
   deleteItem = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
-
-      const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)]
       return {
-        todoData: newArray,
+        todoData: todoData.filter((el) => el.id !== id),
       }
     })
   }
 
-  onToggleDone = (id) => {
+  itemProperty = (arr, id, PropName) => {
+    return arr.map((task) => (task.id === id ? { ...task, [PropName]: !task[PropName] } : task))
+  }
+
+  onCheckedItem = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
-
-      const oldItem = todoData[idx]
-      const newItem = { ...oldItem, checked: !oldItem.checked }
-      const newArray = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)]
-
-      return {
-        todoData: newArray,
-      }
+      return { todoData: this.itemProperty(todoData, id, 'checked') }
     })
   }
 
   onEditingItem = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
-
-      const oldItem = todoData[idx]
-      const newItem = { ...oldItem, editing: !oldItem.editing }
-      const newArray = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)]
-
-      return {
-        todoData: newArray,
-      }
+      return { todoData: this.itemProperty(todoData, id, 'editing') }
     })
   }
 
@@ -132,7 +113,7 @@ export default class TodoApp extends Component {
             onDeleted={(id) => {
               this.deleteItem(id)
             }}
-            onToggleDone={this.onToggleDone}
+            onCheckedItem={this.onCheckedItem}
             dataCreated={createDate}
             addEditingItem={this.addEditingItem}
           />

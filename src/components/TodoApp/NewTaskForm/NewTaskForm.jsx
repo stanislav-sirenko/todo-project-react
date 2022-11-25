@@ -41,6 +41,7 @@ export default class NewTaskForm extends Component {
   }
 
   render() {
+    const { label } = this.state
     return (
       <header className="header">
         <h1>todos</h1>
@@ -50,7 +51,7 @@ export default class NewTaskForm extends Component {
             className="new-todo"
             onChange={this.onLabelChange}
             placeholder="What needs to be done?"
-            value={this.state.label}
+            value={label}
             autoFocus
           />
         </form>

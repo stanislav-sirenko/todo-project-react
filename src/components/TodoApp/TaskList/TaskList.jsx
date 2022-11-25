@@ -25,7 +25,7 @@ export default class TaskList extends Component {
   }
 
   render() {
-    const { todos, onDeleted, onEditingItem, onToggleDone, createDate, addEditingItem } = this.props
+    const { todos, onDeleted, onEditingItem, onCheckedItem, createDate, addEditingItem } = this.props
     const elements = todos.map((i) => {
       const { id, label, ...allProps } = i
 
@@ -40,7 +40,7 @@ export default class TaskList extends Component {
           onDeleted={() => {
             onDeleted(id)
           }}
-          onToggleDone={() => onToggleDone(id)}
+          onCheckedItem={() => onCheckedItem(id)}
           dataCreated={createDate}
           addEditingItem={(text) => addEditingItem(text, id)}
         />

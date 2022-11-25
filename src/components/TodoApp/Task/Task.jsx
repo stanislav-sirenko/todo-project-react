@@ -44,7 +44,7 @@ export default class Task extends Component {
   }
 
   render() {
-    const { id, label, checked, onDeleted, onEditingItem, editing, onToggleDone, createDate } = this.props
+    const { id, label, checked, onDeleted, onEditingItem, editing, onCheckedItem, createDate } = this.props
 
     const createTime = formatDistanceToNow(createDate, { includeSeconds: true })
     const classEdit = editing ? 'editing' : checked ? 'completed' : ''
@@ -62,7 +62,7 @@ export default class Task extends Component {
             type="checkbox"
             checked={checked}
             onChange={() => {
-              onToggleDone()
+              onCheckedItem()
             }}
           />
           <label>
