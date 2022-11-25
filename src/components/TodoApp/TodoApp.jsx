@@ -53,7 +53,7 @@ export default class TodoApp extends Component {
   deleteItem = (id) => {
     this.setState(({ todoData }) => {
       return {
-        todoData: todoData.filter((el) => el.id !== id),
+        todoData: todoData.filter((task) => task.id !== id),
       }
     })
   }
@@ -76,16 +76,16 @@ export default class TodoApp extends Component {
 
   setClearComplitedTodo = () => {
     this.setState(({ todoData }) => {
-      return { todoData: todoData.filter((el) => !el.checked) }
+      return { todoData: todoData.filter((task) => !task.checked) }
     })
   }
 
   filterFunc(todoData, filter) {
     if (filter === 'active') {
-      return todoData.filter((el) => !el.checked)
+      return todoData.filter((task) => !task.checked)
     }
     if (filter === 'completed') {
-      return todoData.filter((el) => el.checked)
+      return todoData.filter((task) => task.checked)
     }
     return todoData
   }
@@ -95,7 +95,7 @@ export default class TodoApp extends Component {
   render() {
     const { todoData, filter, createDate, editing } = this.state
 
-    const checkedCount = todoData.filter((el) => el.checked).length
+    const checkedCount = todoData.filter((task) => task.checked).length
     const todoCount = todoData.length - checkedCount
     const filterStatus = this.filterFunc(todoData, filter)
 

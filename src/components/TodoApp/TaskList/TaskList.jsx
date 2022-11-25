@@ -26,8 +26,8 @@ export default class TaskList extends Component {
 
   render() {
     const { todos, onDeleted, onEditingItem, onCheckedItem, createDate, addEditingItem } = this.props
-    const elements = todos.map((i) => {
-      const { id, label, ...allProps } = i
+    const elements = todos.map((task) => {
+      const { id, label, ...allProps } = task
 
       return (
         <Task

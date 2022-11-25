@@ -29,14 +29,14 @@ export default class Task extends Component {
     createDate: PropTypes.instanceOf(Date),
   }
 
-  onLabelEditTask = (e) => {
+  onLabelEditTask = (event) => {
     this.setState({
-      label: e.target.value,
+      label: event.target.value,
     })
   }
 
-  onSubmitTask = (e) => {
-    e.preventDefault()
+  onSubmitTask = (event) => {
+    event.preventDefault()
     this.props.addEditingItem(this.state.label)
     this.setState({
       label: '',
@@ -50,7 +50,10 @@ export default class Task extends Component {
     const classEdit = editing ? 'editing' : checked ? 'completed' : ''
     const editInput = (
       <form onSubmit={this.onSubmitTask}>
-        <input type="text" className="edit" onChange={this.onLabelEditTask} defaultValue={label} autoFocus />
+        <label>
+          ToDo:
+          <input type="text" className="edit" onChange={this.onLabelEditTask} defaultValue={label} autoFocus />
+        </label>
       </form>
     )
 
@@ -66,11 +69,18 @@ export default class Task extends Component {
             }}
           />
           <label>
-            <span className="description">{label}</span>
+            <span
+              className="description"
+              onClick={() => {
+                onCheckedItem()
+              }}
+            >
+              {label}
+            </span>
             <span className="created">created {createTime} ago</span>
           </label>
-          <button className="icon icon-edit" onClick={onEditingItem} />
-          <button className="icon icon-destroy" onClick={onDeleted} />
+          <button className="icon icon-edit" aria-label="edit" title="edit" onClick={onEditingItem} />
+          <button className="icon icon-destroy" aria-label="destroy" title="destroy" onClick={onDeleted} />
         </div>
         {editing && editInput}
       </li>

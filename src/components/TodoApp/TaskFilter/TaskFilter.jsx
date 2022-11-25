@@ -30,7 +30,13 @@ export default class TaskFilter extends Component {
       const classIsActive = isActive ? 'selected' : ''
 
       return (
-        <button type="button" key={name} className={classIsActive} onClick={() => onFilterChange(name)}>
+        <button
+          type="button"
+          key={name}
+          className={classIsActive}
+          aria-label="filter"
+          onClick={() => onFilterChange(name)}
+        >
           {label}
         </button>
       )
@@ -39,7 +45,9 @@ export default class TaskFilter extends Component {
       <ul className="filters">
         <li>{buttons}</li>
         <li>
-          <button onClick={setClearComplitedTodo}>Clear completed</button>
+          <button type="button" aria-label="clear complited" onClick={setClearComplitedTodo}>
+            Clear completed
+          </button>
         </li>
       </ul>
     )

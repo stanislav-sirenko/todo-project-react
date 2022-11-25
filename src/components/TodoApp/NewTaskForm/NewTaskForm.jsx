@@ -18,22 +18,22 @@ export default class NewTaskForm extends Component {
     onSubmit: PropTypes.func,
   }
 
-  onLabelChange = (e) => {
-    if (e.target.value.charAt(0) === ' ') {
+  onLabelChange = (event) => {
+    if (event.target.value.charAt(0) === ' ') {
       this.setState({
         label: '',
       })
     } else {
       this.setState({
-        label: e.target.value,
+        label: event.target.value,
       })
     }
   }
 
-  onSubmit = (e) => {
+  onSubmit = (event) => {
     const { addItem } = this.props
     const { label } = this.state
-    e.preventDefault()
+    event.preventDefault()
     addItem(label)
     this.setState({
       label: '',
@@ -46,14 +46,16 @@ export default class NewTaskForm extends Component {
       <header className="header">
         <h1>todos</h1>
         <form onSubmit={this.onSubmit}>
-          <input
-            type="text"
-            className="new-todo"
-            onChange={this.onLabelChange}
-            placeholder="What needs to be done?"
-            value={label}
-            autoFocus
-          />
+          <label>
+            <input
+              type="text"
+              className="new-todo"
+              onChange={this.onLabelChange}
+              placeholder="What needs to be done?"
+              value={label}
+              autoFocus
+            />
+          </label>
         </form>
       </header>
     )
