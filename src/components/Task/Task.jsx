@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { formatDistanceToNow } from 'date-fns'
 
+import Timer from '../Timer/Timer'
+
 import './Task.css'
 
 export default class Task extends Component {
@@ -43,7 +45,7 @@ export default class Task extends Component {
   }
 
   render() {
-    const { id, label, checked, onDeleted, onEditingItem, editing, onCheckedItem, createDate } = this.props
+    const { id, label, checked, onDeleted, onEditingItem, editing, onCheckedItem, createDate, min, sec } = this.props
 
     const createTime = formatDistanceToNow(createDate, { includeSeconds: true })
     const classEdit = editing ? 'editing' : checked ? 'completed' : ''
@@ -68,15 +70,18 @@ export default class Task extends Component {
             }}
           />
           <label>
-            <span
-              className="description"
-              onClick={() => {
-                onCheckedItem()
-              }}
-            >
-              {label}
-            </span>
-            <span className="created">created {createTime} ago</span>
+            <span className="title">{label}</span>
+            <div className="wrap-description">
+              <span
+                className="description"
+                onClick={() => {
+                  onCheckedItem()
+                }}
+              >
+                <Timer key={id} min={min} sec={sec} />
+              </span>
+              <span className="created">created {createTime} ago</span>
+            </div>
           </label>
           <button className="icon icon-edit" aria-label="edit" title="edit" onClick={onEditingItem} />
           <button className="icon icon-destroy" aria-label="destroy" title="destroy" onClick={onDeleted} />

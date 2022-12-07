@@ -17,9 +17,11 @@ export default class TodoApp extends Component {
     ],
   }
 
-  createTodoItem(label) {
+  createTodoItem(label, min, sec) {
     return {
       label,
+      min,
+      sec,
       checked: false,
       id: this.maxId++,
       filter: '',
@@ -28,9 +30,9 @@ export default class TodoApp extends Component {
     }
   }
 
-  addItem = (text) => {
-    if (text) {
-      const newTask = this.createTodoItem(text)
+  addItem = (text, min, sec) => {
+    if (text && (min || sec)) {
+      const newTask = this.createTodoItem(text, min, sec)
       this.setState(({ todoData }) => {
         const newArray = [...todoData, newTask]
         return {
@@ -93,7 +95,7 @@ export default class TodoApp extends Component {
   onFilterChange = (filter) => this.setState({ filter })
 
   render() {
-    const { todoData, filter, createDate, editing } = this.state
+    const { todoData, filter, createDate, editing, min, sec } = this.state
 
     const checkedCount = todoData.filter((task) => task.checked).length
     const todoCount = todoData.length - checkedCount
@@ -107,6 +109,8 @@ export default class TodoApp extends Component {
           <TaskList
             todos={filterStatus}
             edit={editing}
+            min={min}
+            sec={sec}
             onEditingItem={(id) => {
               this.onEditingItem(id)
             }}
