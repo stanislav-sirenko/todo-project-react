@@ -17,7 +17,7 @@ export default class TodoApp extends Component {
     ],
   }
 
-  createTodoItem(label, min, sec) {
+  createTodoItem(label, min = 0, sec = 0) {
     return {
       label,
       min,
@@ -32,7 +32,7 @@ export default class TodoApp extends Component {
 
   addItem = (text, min, sec) => {
     if (text && (min || sec)) {
-      const newTask = this.createTodoItem(text, min, sec)
+      const newTask = this.createTodoItem(text, Number(min), Number(sec))
       this.setState(({ todoData }) => {
         const newArray = [...todoData, newTask]
         return {

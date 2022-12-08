@@ -6,33 +6,56 @@ export default class Timer extends Component {
   state = {
     min: this.props.min,
     sec: this.props.sec,
+    zero: false,
+    active: false,
   }
 
-  tick = () => {
-    this.setState((state) => ({
-      sec: state.sec === 0 ? 60 - 1 : state.sec - 1,
-      min: state.sec === 0 ? state.min - 1 : state.min,
-    }))
+  update = () => {
+    const { zero, min, sec } = this.state
+    if (zero) {
+      this.setState({ min, sec: sec + 1 })
+      sec === 59 && this.setState({ min: min + 1, sec: 0 })
+    } else {
+      this.setState({ min, sec: sec - 1 })
+      sec === 0 && this.setState({ min: min - 1, sec: 59 })
+      if (min === 0 && sec === 0) {
+        this.setState({ min: 0, sec: 0 })
+        clearInterval(this.interval)
+      }
+    }
   }
 
-  componentDidMount() {
-    this.interval = setInterval(() => this.tick(), 1000)
+  startTimer = () => {
+    this.setState({ active: true })
+    this.interval = setInterval(() => this.update(), 1000)
+  }
+
+  stopTimer = () => {
+    this.setState({ active: false })
+    clearInterval(this.interval)
   }
 
   componentWillUnmount() {
     clearInterval(this.interval)
   }
 
-  render() {
+  componentDidMount() {
     const { min, sec } = this.state
+    if (min === 0 && sec === 0) {
+      this.setState({ zero: true })
+    }
+  }
+
+  render() {
+    const { active } = this.state
     return (
-      <>
-        <button className="icon icon-play" onClick={console.log('hi')}></button>
-        <button className="icon icon-pause"></button>
-        <span className="total-time">
-          {min}:{sec}
+      <span className="description">
+        <button type="button" className="icon icon-play" onClick={this.startTimer} disabled={active} />
+        <button type="button" className="icon icon-pause" onClick={this.stopTimer} />
+        <span className="timer">
+          {this.state.min} min {this.state.sec} sec
         </span>
-      </>
+      </span>
     )
   }
 }
