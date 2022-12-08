@@ -47,13 +47,13 @@ export default class Timer extends Component {
   }
 
   render() {
-    const { active } = this.state
+    const { active, min, sec } = this.state
     return (
       <span className="description">
         <button type="button" className="icon icon-play" onClick={this.startTimer} disabled={active} />
         <button type="button" className="icon icon-pause" onClick={this.stopTimer} />
         <span className="timer">
-          {this.state.min} min {this.state.sec} sec
+          {min} min {sec} sec
         </span>
       </span>
     )
