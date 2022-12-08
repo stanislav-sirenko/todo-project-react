@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import './Timer.css'
 
@@ -8,6 +9,22 @@ export default class Timer extends Component {
     sec: this.props.sec,
     zero: false,
     active: false,
+  }
+
+  static defaultProps = {
+    update: () => {},
+    startTimer: () => {},
+    stopTimer: () => {},
+  }
+
+  static propTypes = {
+    min: PropTypes.number,
+    sec: PropTypes.number,
+    zero: PropTypes.bool,
+    active: PropTypes.bool,
+    update: PropTypes.func,
+    startTimer: PropTypes.func,
+    stopTimer: PropTypes.func,
   }
 
   update = () => {
