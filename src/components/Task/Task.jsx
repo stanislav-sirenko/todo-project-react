@@ -70,14 +70,16 @@ export default class Task extends Component {
             }}
           />
           <label>
-            <span className="title">{label}</span>
+            <span
+              className="title"
+              onClick={() => {
+                onCheckedItem()
+              }}
+            >
+              {label}
+            </span>
             <div className="wrap-description">
-              <span
-                className="description"
-                onClick={() => {
-                  onCheckedItem()
-                }}
-              >
+              <span className="description">
                 <Timer key={id} min={min} sec={sec} />
               </span>
               <span className="created">created {createTime} ago</span>
