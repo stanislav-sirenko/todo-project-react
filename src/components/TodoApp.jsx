@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 
 import NewTaskForm from './NewTaskForm'
 import TaskList from './TaskList'
@@ -6,129 +6,101 @@ import Footer from './Footer'
 
 import './TodoApp.css'
 
-export default class TodoApp extends Component {
-  maxId = 1
-
-  state = {
-    todoData: [
-      this.createTodoItem('learn HTML & CSS'),
-      this.createTodoItem('learn JavaScript'),
-      this.createTodoItem('learn React & TS'),
-    ],
-  }
-
-  createTodoItem(label, min = 0, sec = 0) {
+const TodoApp = () => {
+  const createTodoItem = (label, min = 0, sec = 0) => {
     return {
       label,
       min,
       sec,
       checked: false,
-      id: this.maxId++,
-      filter: '',
+      id: Math.floor(Math.random() * 100),
       createDate: new Date(),
       editing: false,
     }
   }
 
-  addItem = (text, min, sec) => {
+  const [todoData, setTodoData] = useState([
+    createTodoItem('learn HTML & CSS'),
+    createTodoItem('learn JavaScript'),
+    createTodoItem('learn React & TS'),
+  ])
+
+  const [filterName, setFilter] = useState('all')
+
+  const addItem = (text, min, sec) => {
     if (text && (min || sec)) {
-      const newTask = this.createTodoItem(text, Number(min), Number(sec))
-      this.setState(({ todoData }) => {
-        const newArray = [...todoData, newTask]
-        return {
-          todoData: newArray,
-        }
-      })
+      const newTask = createTodoItem(text, Number(min), Number(sec))
+      setTodoData((Data) => [...Data, newTask])
     }
   }
 
-  addEditingItem = (text, id) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: todoData.map((task) => {
-          return task.id === id ? { ...task, label: text ? text : task.label, editing: !task.editing } : task
-        }),
-      }
-    })
+  const addEditingItem = (text, id) => {
+    setTodoData((Data) =>
+      Data.map((task) => (task.id === id ? { ...task, label: text ? text : task.label, editing: !task.editing } : task))
+    )
   }
 
-  deleteItem = (id) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: todoData.filter((task) => task.id !== id),
-      }
-    })
+  const deleteItem = (id) => {
+    setTodoData((Data) => Data.filter((task) => task.id !== id))
   }
 
-  itemProperty = (arr, id, PropName) => {
+  const itemProperty = (arr, id, PropName) => {
     return arr.map((task) => (task.id === id ? { ...task, [PropName]: !task[PropName] } : task))
   }
 
-  onCheckedItem = (id) => {
-    this.setState(({ todoData }) => {
-      return { todoData: this.itemProperty(todoData, id, 'checked') }
-    })
+  const onCheckedItem = (id) => {
+    setTodoData((Data) => itemProperty(Data, id, 'checked'))
   }
 
-  onEditingItem = (id) => {
-    this.setState(({ todoData }) => {
-      return { todoData: this.itemProperty(todoData, id, 'editing') }
-    })
+  const onEditingItem = (id) => {
+    setTodoData((Data) => itemProperty(Data, id, 'editing'))
   }
 
-  setClearComplitedTodo = () => {
-    this.setState(({ todoData }) => {
-      return { todoData: todoData.filter((task) => !task.checked) }
-    })
+  const setClearComplitedTodo = () => {
+    setTodoData((Data) => Data.filter((task) => !task.checked))
   }
 
-  filterFunc(todoData, filter) {
-    if (filter === 'active') {
+  const filterFunc = (todoData, filterName) => {
+    if (filterName === 'active') {
       return todoData.filter((task) => !task.checked)
     }
-    if (filter === 'completed') {
+    if (filterName === 'completed') {
       return todoData.filter((task) => task.checked)
     }
     return todoData
   }
 
-  onFilterChange = (filter) => this.setState({ filter })
+  const onFilterChange = (filterName) => setFilter(filterName)
 
-  render() {
-    const { todoData, filter, createDate, editing, min, sec } = this.state
+  const checkedCount = todoData.filter((task) => task.checked).length
+  const todoCount = todoData.length - checkedCount
+  const filterStatus = filterFunc(todoData, filterName)
 
-    const checkedCount = todoData.filter((task) => task.checked).length
-    const todoCount = todoData.length - checkedCount
-    const filterStatus = this.filterFunc(todoData, filter)
+  return (
+    <section className="todoapp">
+      <NewTaskForm addItem={addItem} />
 
-    return (
-      <section className="todoapp">
-        <NewTaskForm addItem={this.addItem} />
-
-        <section className="main">
-          <TaskList
-            todos={filterStatus}
-            edit={editing}
-            min={min}
-            sec={sec}
-            onEditingItem={(id) => {
-              this.onEditingItem(id)
-            }}
-            onDeleted={(id) => {
-              this.deleteItem(id)
-            }}
-            onCheckedItem={this.onCheckedItem}
-            dataCreated={createDate}
-            addEditingItem={this.addEditingItem}
-          />
-          <Footer
-            todoCount={todoCount}
-            filter={filter}
-            onFilterChange={this.onFilterChange}
-            setClearComplitedTodo={this.setClearComplitedTodo}
-          />
-        </section>
+      <section className="main">
+        <TaskList
+          todos={filterStatus}
+          onEditingItem={(id) => {
+            onEditingItem(id)
+          }}
+          onDeleted={(id) => {
+            deleteItem(id)
+          }}
+          onCheckedItem={onCheckedItem}
+          addEditingItem={addEditingItem}
+        />
+        <Footer
+          todoCount={todoCount}
+          filterName={filterName}
+          onFilterChange={onFilterChange}
+          setClearComplitedTodo={setClearComplitedTodo}
+        />
       </section>
-    )
-  }
+    </section>
+  )
 }
+
+export default TodoApp

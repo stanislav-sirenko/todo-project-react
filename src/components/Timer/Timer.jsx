@@ -1,78 +1,54 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import './Timer.css'
 
-export default class Timer extends Component {
-  state = {
-    min: this.props.min,
-    sec: this.props.sec,
-    zero: false,
-    active: false,
-  }
+const Timer = ({ min, sec }) => {
+  const [paused, setPaused] = useState(false)
+  const [[minutes, seconds], setTime] = useState([min, sec])
 
-  static defaultProps = {
-    update: () => {},
-    startTimer: () => {},
-    stopTimer: () => {},
-  }
+  const tick = () => {
+    if (paused) return
 
-  static propTypes = {
-    min: PropTypes.number,
-    sec: PropTypes.number,
-    zero: PropTypes.bool,
-    active: PropTypes.bool,
-    update: PropTypes.func,
-    startTimer: PropTypes.func,
-    stopTimer: PropTypes.func,
-  }
-
-  update = () => {
-    const { zero, min, sec } = this.state
-    if (zero) {
-      this.setState({ min, sec: sec + 1 })
-      sec === 59 && this.setState({ min: min + 1, sec: 0 })
+    if (minutes === 0 && seconds === 0) {
+      setPaused(true)
+    } else if (seconds == 0) {
+      setTime([minutes - 1, 59])
     } else {
-      this.setState({ min, sec: sec - 1 })
-      sec === 0 && this.setState({ min: min - 1, sec: 59 })
-      if (min === 0 && sec === 0) {
-        this.setState({ min: 0, sec: 0 })
-        clearInterval(this.interval)
-      }
+      setTime([minutes, seconds - 1])
     }
   }
 
-  startTimer = () => {
-    this.setState({ active: true })
-    this.interval = setInterval(() => this.update(), 1000)
-  }
+  useEffect(() => {
+    const timerID = setInterval(() => tick(), 1000)
+    return () => clearInterval(timerID)
+  })
 
-  stopTimer = () => {
-    this.setState({ active: false })
-    clearInterval(this.interval)
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval)
-  }
-
-  componentDidMount() {
-    const { min, sec } = this.state
-    if (min === 0 && sec === 0) {
-      this.setState({ zero: true })
-    }
-  }
-
-  render() {
-    const { active, min, sec } = this.state
-    return (
-      <span className="description">
-        <button type="button" className="icon icon-play" onClick={this.startTimer} disabled={active} />
-        <button type="button" className="icon icon-pause" onClick={this.stopTimer} />
-        <span className="timer">
-          {min} min {sec} sec
-        </span>
+  return (
+    <span className="description">
+      <button type="button" className="icon icon-play" onClick={() => setPaused(false)} />
+      <button type="button" className="icon icon-pause" onClick={() => setPaused(true)} />
+      <span className="timer">
+        {minutes.toString().padStart(2, '0')} min {seconds.toString().padStart(2, '0')} sec
       </span>
-    )
-  }
+    </span>
+  )
+}
+
+export default Timer
+
+Timer.defaultProps = {
+  update: () => {},
+  startTimer: () => {},
+  stopTimer: () => {},
+}
+
+Timer.propTypes = {
+  minutes: PropTypes.number,
+  seconds: PropTypes.number,
+  zero: PropTypes.bool,
+  active: PropTypes.bool,
+  update: PropTypes.func,
+  startTimer: PropTypes.func,
+  stopTimer: PropTypes.func,
 }

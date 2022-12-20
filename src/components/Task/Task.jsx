@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -6,90 +6,94 @@ import Timer from '../Timer/Timer'
 
 import './Task.css'
 
-export default class Task extends Component {
-  state = {
-    label: '',
+const Task = ({
+  id,
+  label,
+  checked,
+  onDeleted,
+  onEditingItem,
+  addEditingItem,
+  editing,
+  onCheckedItem,
+  createDate,
+  min,
+  sec,
+}) => {
+  const [labelTask, setLabelTask] = useState('')
+
+  const onLabelEditTask = (event) => {
+    setLabelTask(event.target.value)
   }
 
-  static defaultProps = {
-    onDeleted: () => {},
-    onEditingItem: () => {},
-    onToggleDone: () => {},
-    onSubmitTask: () => {},
-    onLabelEditTask: () => {},
-    createDate: () => {},
-  }
-
-  static propTypes = {
-    label: PropTypes.string,
-    checked: PropTypes.bool,
-    onDeleted: PropTypes.func,
-    onEditingItem: PropTypes.func,
-    editing: PropTypes.bool,
-    onToggleDone: PropTypes.func,
-    createDate: PropTypes.instanceOf(Date),
-  }
-
-  onLabelEditTask = (event) => {
-    this.setState({
-      label: event.target.value,
-    })
-  }
-
-  onSubmitTask = (event) => {
+  const onSubmitTask = (event) => {
     event.preventDefault()
-    this.props.addEditingItem(this.state.label)
-    this.setState({
-      label: '',
-    })
+    addEditingItem(labelTask)
+    setLabelTask('')
   }
 
-  render() {
-    const { id, label, checked, onDeleted, onEditingItem, editing, onCheckedItem, createDate, min, sec } = this.props
+  const createTime = formatDistanceToNow(createDate, { includeSeconds: true })
+  const classEdit = editing ? 'editing' : checked ? 'completed' : ''
+  const editInput = (
+    <form onSubmit={onSubmitTask}>
+      <label>
+        ToDo:
+        <input type="text" className="edit" onChange={onLabelEditTask} defaultValue={label} autoFocus />
+      </label>
+    </form>
+  )
 
-    const createTime = formatDistanceToNow(createDate, { includeSeconds: true })
-    const classEdit = editing ? 'editing' : checked ? 'completed' : ''
-    const editInput = (
-      <form onSubmit={this.onSubmitTask}>
+  return (
+    <li key={id} className={classEdit}>
+      <div className="view">
+        <input
+          className="toggle"
+          type="checkbox"
+          checked={checked}
+          onChange={() => {
+            onCheckedItem()
+          }}
+        />
         <label>
-          ToDo:
-          <input type="text" className="edit" onChange={this.onLabelEditTask} defaultValue={label} autoFocus />
-        </label>
-      </form>
-    )
-
-    return (
-      <li key={id} className={classEdit}>
-        <div className="view">
-          <input
-            className="toggle"
-            type="checkbox"
-            checked={checked}
-            onChange={() => {
+          <span
+            className="title"
+            onClick={() => {
               onCheckedItem()
             }}
-          />
-          <label>
-            <span
-              className="title"
-              onClick={() => {
-                onCheckedItem()
-              }}
-            >
-              {label}
+          >
+            {label}
+          </span>
+          <div className="wrap-description">
+            <span className="description">
+              <Timer min={min} sec={sec} />
             </span>
-            <div className="wrap-description">
-              <span className="description">
-                <Timer key={id} min={min} sec={sec} />
-              </span>
-              <span className="created">created {createTime} ago</span>
-            </div>
-          </label>
-          <button className="icon icon-edit" aria-label="edit" title="edit" onClick={onEditingItem} />
-          <button className="icon icon-destroy" aria-label="destroy" title="destroy" onClick={onDeleted} />
-        </div>
-        {editing && editInput}
-      </li>
-    )
-  }
+            <span className="created">created {createTime} ago</span>
+          </div>
+        </label>
+        <button className="icon icon-edit" aria-label="edit" title="edit" onClick={onEditingItem} />
+        <button className="icon icon-destroy" aria-label="destroy" title="destroy" onClick={onDeleted} />
+      </div>
+      {editing && editInput}
+    </li>
+  )
 }
+
+Task.defaultProps = {
+  onDeleted: () => {},
+  onEditingItem: () => {},
+  onToggleDone: () => {},
+  onSubmitTask: () => {},
+  onLabelEditTask: () => {},
+  createDate: () => {},
+}
+
+Task.propTypes = {
+  label: PropTypes.string,
+  checked: PropTypes.bool,
+  onDeleted: PropTypes.func,
+  onEditingItem: PropTypes.func,
+  editing: PropTypes.bool,
+  onToggleDone: PropTypes.func,
+  createDate: PropTypes.instanceOf(Date),
+}
+
+export default Task
