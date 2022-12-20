@@ -53,7 +53,12 @@ const NewTaskForm = ({ addItem }) => {
           autoFocus
           value={sec}
         />
-        <input type="submit" className="new-todo-form-button" />
+        <input
+          type="submit"
+          className="new-todo-form-button"
+          style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px' }}
+          tabIndex="-1"
+        />
       </form>
     </header>
   )
