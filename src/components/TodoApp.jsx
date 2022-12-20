@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 import NewTaskForm from './NewTaskForm'
 import TaskList from './TaskList'
@@ -13,7 +14,7 @@ const TodoApp = () => {
       min,
       sec,
       checked: false,
-      id: Math.floor(Math.random() * 100),
+      id: uuidv4(),
       createDate: new Date(),
       editing: false,
     }
