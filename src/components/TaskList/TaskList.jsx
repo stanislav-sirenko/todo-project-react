@@ -8,7 +8,6 @@ import './TaskList.css'
 const TaskList = ({ todos, onDeleted, onEditingItem, onCheckedItem, createDate, addEditingItem }) => {
   const elements = todos.map((task) => {
     const { id, label, ...allProps } = task
-    console.log(id)
 
     return (
       <Task
